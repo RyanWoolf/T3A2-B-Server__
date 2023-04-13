@@ -44,11 +44,17 @@ router.post('/register', async (req, res) => {
       code: 201,
       message: `Thanks for registering! ${insertedUser.firstName}`,
       user_id: insertedUser._id,
+      email: insertedUser.email,
       firstName: insertedUser.firstName,
       token: token
     })
   } catch (err) {
-    res.status(500).send({ error: err.keyValue })
+    console.log(err + ` Failed to register. ${req.body.email} is already in use.`)
+    res.status(406).send({ 
+      code: 406,
+      message: `${req.body.email} is already in use.`,
+      error: req.body.email 
+    })
   }
 })
 
@@ -71,6 +77,7 @@ router.post('/login', async (req, res) => {
         message: `Welcome back to PAWFUL!, 
       ${user.firstName}`,
         user_id: user._id,
+        email: user.email,
         firstName: user.firstName,
         token: token
       })
